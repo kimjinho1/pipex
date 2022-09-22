@@ -6,7 +6,7 @@
 #    By: jinhokim <jinhokim@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/07 13:02:19 by jinhokim          #+#    #+#              #
-#    Updated: 2022/09/15 15:09:23 by jinhokim         ###   ########.fr        #
+#    Updated: 2022/09/22 15:17:17 by jinhokim         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ SRCS			= ./mandatory/pipex.c \
 
 BONUS_SRCS 		= ./bonus/pipex_bonus.c \
 				./bonus/utils_bonus.c \
-				./bonus/gnl.c
+				./bonus/gnl_bonus.c
 
 HEADER			= ./mandatory/pipex.h
 

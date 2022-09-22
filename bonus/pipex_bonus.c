@@ -6,19 +6,11 @@
 /*   By: jinhokim <jinhokim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 17:18:43 by jinhokim          #+#    #+#             */
-/*   Updated: 2022/09/20 08:16:01 by jinhokim         ###   ########.fr       */
+/*   Updated: 2022/09/22 15:48:37 by jinhokim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
-
-void	here_doc_check(int ac, int *fd)
-{
-	if (ac < 6)
-		perror_exit("argument error");
-	if (pipe(fd) == -1)
-		perror_exit("pipe error");
-}
 
 void	here_doc(char *limiter, int ac)
 {
@@ -26,7 +18,10 @@ void	here_doc(char *limiter, int ac)
 	int		fd[2];
 	char	*line;
 
-	here_doc_check(ac, &fd);
+	if (ac < 6)
+		perror_exit("argument error");
+	if (pipe(fd) == -1)
+		perror_exit("pipe error");
 	pid = fork();
 	if (pid == 0)
 	{
@@ -35,11 +30,8 @@ void	here_doc(char *limiter, int ac)
 		{
 			if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
 				exit(EXIT_SUCCESS);
-			dup2(fd[1], STDOUT_FILENO);
 			write(fd[1], line, ft_strlen(line));
-			free(line);
 		}
-		free(line);
 	}
 	else
 	{
