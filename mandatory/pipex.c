@@ -6,7 +6,7 @@
 /*   By: jinhokim <jinhokim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 15:49:13 by jinhokim          #+#    #+#             */
-/*   Updated: 2022/09/15 12:15:36 by jinhokim         ###   ########.fr       */
+/*   Updated: 2022/10/07 15:00:09 by jinhokim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	parant_process(char **av, char **envp, int *fd)
 {
 	int	outfile;
 
-	outfile = open(av[4], O_RDWR | O_CREAT | O_TRUNC);
+	outfile = open(av[4], O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (outfile == -1)
 		perror_exit("outfile error");
 	close(fd[1]);
