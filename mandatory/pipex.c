@@ -6,7 +6,7 @@
 /*   By: jinhokim <jinhokim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 15:49:13 by jinhokim          #+#    #+#             */
-/*   Updated: 2022/10/07 15:00:09 by jinhokim         ###   ########.fr       */
+/*   Updated: 2022/10/27 11:04:29 by jinhokim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,20 +49,17 @@ int	main(int ac, char **av, char **envp)
 
 	if (ac != 5)
 		perror_exit("argument error");
+	if (pipe(fd) == -1)
+		perror_exit("pipe error");
+	pid = fork();
+	if (pid == -1)
+		perror_exit("fork error");
+	if (pid == 0)
+		child_process(av, envp, fd);
 	else
 	{
-		if (pipe(fd) == -1)
-			perror_exit("pipe error");
-		pid = fork();
-		if (pid == -1)
-			perror_exit("fork error");
-		if (pid == 0)
-			child_process(av, envp, fd);
-		else
-		{
-			waitpid(pid, NULL, 0);
-			parant_process(av, envp, fd);
-		}
+		waitpid(pid, NULL, 0);
+		parant_process(av, envp, fd);
 	}
 	return (0);
 }

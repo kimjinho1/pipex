@@ -6,7 +6,7 @@
 /*   By: jinhokim <jinhokim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 15:40:28 by jinhokim          #+#    #+#             */
-/*   Updated: 2022/09/13 16:40:25 by jinhokim         ###   ########.fr       */
+/*   Updated: 2022/10/27 11:08:32 by jinhokim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 void	perror_exit(char *opt)
 {
-	perror(opt);
+	write(2, opt, ft_strlen(opt));
+	write(2, "\n", 1);
 	exit(EXIT_FAILURE);
 }
 
