@@ -6,11 +6,18 @@
 /*   By: jinhokim <jinhokim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 17:18:17 by jinhokim          #+#    #+#             */
-/*   Updated: 2022/09/13 19:13:12 by jinhokim         ###   ########.fr       */
+/*   Updated: 2022/10/27 11:40:45 by jinhokim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
+
+void	perror_exit(char *opt)
+{
+	write(2, opt, ft_strlen(opt));
+	write(2, "\n", 1);
+	exit(EXIT_FAILURE);
+}
 
 static char	**get_env_path(char **envp)
 {
@@ -70,20 +77,4 @@ void	execute(char *cmd, char **envp)
 	}
 	if (execve(cmd_path, cmd_arg, envp) == -1)
 		perror_exit("execve error");
-}
-
-void	perror_exit(char *opt)
-{
-	perror(opt);
-	exit(EXIT_FAILURE);
-}
-
-int	open_infile(char *path)
-{
-	int	infile;
-
-	infile = open(path, O_RDONLY);
-	if (infile == -1)
-		perror_exit("infile error");
-	return (infile);
 }

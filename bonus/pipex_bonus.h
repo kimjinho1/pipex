@@ -6,7 +6,7 @@
 /*   By: jinhokim <jinhokim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 17:17:44 by jinhokim          #+#    #+#             */
-/*   Updated: 2022/09/13 19:13:48 by jinhokim         ###   ########.fr       */
+/*   Updated: 2022/10/27 11:42:38 by jinhokim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,7 @@
 
 void	perror_exit(char *opt);
 void	execute(char *cmd, char **envp);
-int		open_infile(char *path);
 
 int		get_next_line(char **line);
-
-void	here_doc(char *limiter, int ac);
-void	child_process(char *av, char **envp);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jinhokim <jinhokim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 15:17:28 by jinhokim          #+#    #+#             */
-/*   Updated: 2022/09/22 15:17:29 by jinhokim         ###   ########.fr       */
+/*   Updated: 2022/10/27 11:12:19 by jinhokim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	get_next_line(char **line)
 
 	i = 0;
 	r = 0;
-	buf = (char *)malloc(10000);
+	buf = (char *)malloc(100000);
 	if (!buf)
 		return (-1);
 	r = read(0, &c, 1);
