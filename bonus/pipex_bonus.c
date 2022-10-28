@@ -6,7 +6,7 @@
 /*   By: jinhokim <jinhokim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 17:18:43 by jinhokim          #+#    #+#             */
-/*   Updated: 2022/10/27 12:27:40 by jinhokim         ###   ########.fr       */
+/*   Updated: 2022/10/28 20:50:48 by jinhokim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ static void	here_doc(char *limiter)
 {
 	pid_t	pid;
 	int		fd[2];
-	char	*line;
 
 	if (pipe(fd) == -1)
 		perror_exit("pipe error");
@@ -26,12 +25,7 @@ static void	here_doc(char *limiter)
 	if (pid == 0)
 	{
 		close(fd[0]);
-		while (get_next_line(&line))
-		{
-			if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
-				exit(EXIT_SUCCESS);
-			write(fd[1], line, ft_strlen(line));
-		}
+		here_doc_write(limiter, fd);
 	}
 	else
 	{
@@ -108,7 +102,7 @@ int	main(int ac, char **av, char **envp)
 
 	if (ac < 5)
 		perror_exit("argument error");
-	if (ft_strncmp(av[1], "here_doc", 8) == 0)
+	if (ft_strncmp(av[1], "here_doc", 8 + 1) == 0)
 	{
 		if (ac < 6)
 			perror_exit("argument error");

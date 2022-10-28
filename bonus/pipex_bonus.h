@@ -6,7 +6,7 @@
 /*   By: jinhokim <jinhokim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 17:17:44 by jinhokim          #+#    #+#             */
-/*   Updated: 2022/10/27 11:42:38 by jinhokim         ###   ########.fr       */
+/*   Updated: 2022/10/28 20:51:06 by jinhokim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include "../ft_printf/ft_printf.h"
 
 void	perror_exit(char *opt);
+void	here_doc_write(char *limiter, int *fd);
 void	execute(char *cmd, char **envp);
 
 int		get_next_line(char **line);

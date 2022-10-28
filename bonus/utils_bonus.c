@@ -6,7 +6,7 @@
 /*   By: jinhokim <jinhokim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 17:18:17 by jinhokim          #+#    #+#             */
-/*   Updated: 2022/10/27 11:40:45 by jinhokim         ###   ########.fr       */
+/*   Updated: 2022/10/28 20:50:18 by jinhokim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,20 @@ void	perror_exit(char *opt)
 	write(2, opt, ft_strlen(opt));
 	write(2, "\n", 1);
 	exit(EXIT_FAILURE);
+}
+
+void	here_doc_write(char *limiter, int *fd)
+{
+	char	*line;
+
+	while (get_next_line(&line))
+	{
+		if (ft_strncmp(line, limiter, ft_strlen(limiter) + 1) == 0)
+			exit(EXIT_SUCCESS);
+		write(fd[1], line, ft_strlen(line));
+		write(fd[1], "\n", 1);
+		free(line);
+	}
 }
 
 static char	**get_env_path(char **envp)
