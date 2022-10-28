@@ -24,7 +24,4 @@
 void	perror_exit(char *opt);
 void	execute(char *cmd, char **envp);
 
-void	child_process(char **av, char **envp, int *fd);
-void	parant_process(char **av, char **envp, int *fd);
-
 #endif
