@@ -29,8 +29,9 @@ static void	here_doc(char *limiter)
 	}
 	else
 	{
-		close(fd[1]);
 		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);
+		close(fd[1]);
 		wait(NULL);
 	}
 }
@@ -47,18 +48,18 @@ static void	infile_process(char *av, char **envp, int infile)
 		perror_exit("fork error");
 	if (pid == 0)
 	{
-		if (infile == -1)
-			perror_exit("infile error");
-		close(fd[0]);
 		dup2(infile, STDIN_FILENO);
 		dup2(fd[1], STDOUT_FILENO);
+		close(infile);
+		close(fd[0]);
+		close(fd[1]);
 		execute(av, envp);
 	}	
 	else
 	{
-		close(fd[1]);
 		dup2(fd[0], STDIN_FILENO);
-		waitpid(pid, NULL, 0);
+		close(fd[0]);
+		close(fd[1]);
 	}
 }
 
@@ -74,15 +75,16 @@ static void	child_process(char *av, char **envp)
 		perror_exit("fork error");
 	if (pid == 0)
 	{
-		close(fd[0]);
 		dup2(fd[1], STDOUT_FILENO);
+		close(fd[0]);
+		close(fd[1]);
 		execute(av, envp);
 	}	
 	else
 	{
-		close(fd[1]);
 		dup2(fd[0], STDIN_FILENO);
-		waitpid(pid, NULL, 0);
+		close(fd[0]);
+		close(fd[1]);
 	}
 }
 
@@ -113,6 +115,8 @@ int	main(int ac, char **av, char **envp)
 	else
 	{
 		infile = open(av[1], O_RDONLY);
+		if (infile == -1)
+			perror_exit("infile error");
 		i = 2;
 		infile_process(av[i++], envp, infile);
 	}
