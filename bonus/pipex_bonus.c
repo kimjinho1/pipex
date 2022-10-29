@@ -6,7 +6,7 @@
 /*   By: jinhokim <jinhokim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 17:18:43 by jinhokim          #+#    #+#             */
-/*   Updated: 2022/10/28 20:50:48 by jinhokim         ###   ########.fr       */
+/*   Updated: 2022/10/30 08:09:19 by jinhokim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ static void	infile_process(char *av, char **envp, int infile)
 		perror_exit("fork error");
 	if (pid == 0)
 	{
+		if (infile == -1)
+			perror_exit("infile error");
 		dup2(infile, STDIN_FILENO);
 		dup2(fd[1], STDOUT_FILENO);
 		close(infile);
@@ -93,6 +95,8 @@ void	last_execute(int ac, char **av, char **envp)
 	int	outfile;
 
 	outfile = open(av[ac - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (outfile == -1)
+		perror_exit("outfile error");
 	dup2(outfile, STDOUT_FILENO);
 	execute(av[ac - 2], envp);
 }
@@ -115,8 +119,6 @@ int	main(int ac, char **av, char **envp)
 	else
 	{
 		infile = open(av[1], O_RDONLY);
-		if (infile == -1)
-			perror_exit("infile error");
 		i = 2;
 		infile_process(av[i++], envp, infile);
 	}
