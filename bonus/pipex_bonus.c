@@ -6,123 +6,43 @@
 /*   By: jinhokim <jinhokim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 17:18:43 by jinhokim          #+#    #+#             */
-/*   Updated: 2022/10/30 08:09:19 by jinhokim         ###   ########.fr       */
+/*   Updated: 2022/11/01 04:52:05 by jinhokim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-static void	here_doc(char *limiter)
+static void	finish(char **temp_av, int is_here_doc)
 {
-	pid_t	pid;
-	int		fd[2];
-
-	if (pipe(fd) == -1)
-		perror_exit("pipe error");
-	pid = fork();
-	if (pid == -1)
-		perror_exit("fork error");
-	if (pid == 0)
-	{
-		close(fd[0]);
-		here_doc_write(limiter, fd);
-	}
-	else
-	{
-		dup2(fd[0], STDIN_FILENO);
-		close(fd[0]);
-		close(fd[1]);
-		wait(NULL);
-	}
-}
-
-static void	infile_process(char *av, char **envp, int infile)
-{
-	pid_t	pid;
-	int		fd[2];
-
-	if (pipe(fd) == -1)
-		perror_exit("pipe error");
-	pid = fork();
-	if (pid == -1)
-		perror_exit("fork error");
-	if (pid == 0)
-	{
-		if (infile == -1)
-			perror_exit("infile error");
-		dup2(infile, STDIN_FILENO);
-		dup2(fd[1], STDOUT_FILENO);
-		close(infile);
-		close(fd[0]);
-		close(fd[1]);
-		execute(av, envp);
-	}	
-	else
-	{
-		dup2(fd[0], STDIN_FILENO);
-		close(fd[0]);
-		close(fd[1]);
-	}
-}
-
-static void	child_process(char *av, char **envp)
-{
-	pid_t	pid;
-	int		fd[2];
-
-	if (pipe(fd) == -1)
-		perror_exit("pipe error");
-	pid = fork();
-	if (pid == -1)
-		perror_exit("fork error");
-	if (pid == 0)
-	{
-		dup2(fd[1], STDOUT_FILENO);
-		close(fd[0]);
-		close(fd[1]);
-		execute(av, envp);
-	}	
-	else
-	{
-		dup2(fd[0], STDIN_FILENO);
-		close(fd[0]);
-		close(fd[1]);
-	}
-}
-
-void	last_execute(int ac, char **av, char **envp)
-{
-	int	outfile;
-
-	outfile = open(av[ac - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (outfile == -1)
-		perror_exit("outfile error");
-	dup2(outfile, STDOUT_FILENO);
-	execute(av[ac - 2], envp);
+	while (wait(NULL) > 0)
+		;
+	free_array(temp_av, is_here_doc);
 }
 
 int	main(int ac, char **av, char **envp)
 {
-	int	infile;
-	int	i;
+	char	**temp_av;
+	int		is_here_doc;
+	
 
 	if (ac < 5)
 		perror_exit("argument error");
+	is_here_doc = 0;
 	if (ft_strncmp(av[1], "here_doc", 8 + 1) == 0)
 	{
+		is_here_doc = 1;
 		if (ac < 6)
 			perror_exit("argument error");
-		here_doc(av[2]);
-		i = 3;
-		child_process(av[i++], envp);
+		here_doc(av[2], "/tmp/here_doc");
+		temp_av = here_doc_shift(av, 2, "/tmp/here_doc");
 	}
 	else
-	{
-		infile = open(av[1], O_RDONLY);
-		i = 2;
-		infile_process(av[i++], envp, infile);
-	}
-	while (i < ac - 2)
-		child_process(av[i++], envp);
-	last_execute(ac, av, envp);
+		temp_av = shift(av, 1);
+	for (int i = 0; i < get_array_size(temp_av); i++)
+		printf("temp_av[%d]: %s\n", i, temp_av[i]);
+	process(temp_av, envp);
+	printf("wait start\n");
+	finish(temp_av, is_here_doc);
+	printf("wait finish\n");
+	return (0);
 }

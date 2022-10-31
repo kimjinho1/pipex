@@ -6,7 +6,7 @@
 /*   By: jinhokim <jinhokim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 17:18:17 by jinhokim          #+#    #+#             */
-/*   Updated: 2022/10/28 20:50:18 by jinhokim         ###   ########.fr       */
+/*   Updated: 2022/11/01 03:00:01 by jinhokim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,76 +19,38 @@ void	perror_exit(char *opt)
 	exit(EXIT_FAILURE);
 }
 
-void	here_doc_write(char *limiter, int *fd)
+int	get_array_size(char **av)
 {
-	char	*line;
-
-	while (get_next_line(&line))
-	{
-		if (ft_strncmp(line, limiter, ft_strlen(limiter) + 1) == 0)
-			exit(EXIT_SUCCESS);
-		write(fd[1], line, ft_strlen(line));
-		write(fd[1], "\n", 1);
-		free(line);
-	}
-}
-
-static char	**get_env_path(char **envp)
-{
-	char	*path;
-
-	while (ft_strncmp("PATH", *envp, 4))
-		envp++;
-	path = *envp + 5;
-	return (ft_split(path, ':'));
-}
-
-static char	*get_cmd(char **path, char *cmd)
-{
-	int		i;
-	char	*joined_cmd;
-	char	*ret_cmd;
+	int	i;
 
 	i = 0;
-	if (access(cmd, X_OK) != -1)
-		return (cmd);
-	joined_cmd = ft_strjoin("/", cmd);
-	while (path[i])
-	{
-		ret_cmd = ft_strjoin(path[i++], joined_cmd);
-		if (access(ret_cmd, X_OK) != -1)
-		{
-			free(joined_cmd);
-			return (ret_cmd);
-		}
-		free(ret_cmd);
-	}
-	free(joined_cmd);
-	return (NULL);
+	while (av[i])
+		i++;
+	return (i);
 }
 
-void	execute(char *cmd, char **envp)
+char	**shift(char **av, int n)
 {
 	int		i;
-	char	**paths;
-	char	**cmd_arg;
-	char	*cmd_path;
+	int		size;
+	char	**temp_av;
+	
+	i = -1;
+	size = get_array_size(av) - n;
+	temp_av = (char **)malloc(sizeof(char *) * (size + 1));
+	while (++i < size)
+		temp_av[i] = ft_strdup(av[i + n]);
+	temp_av[i] = NULL;
+	return (temp_av);
+}
 
-	i = 0;
-	paths = get_env_path(envp);
-	cmd_arg = ft_split(cmd, ' ');
-	cmd_path = get_cmd(paths, cmd_arg[0]);
-	if (!cmd_path)
-	{
-		while (paths[i])
-			free(paths[i++]);
-		free(paths);
-		i = 0;
-		while (cmd_arg[i])
-			free(cmd_arg[i++]);
-		free(cmd_arg);
-		perror_exit("command error");
-	}
-	if (execve(cmd_path, cmd_arg, envp) == -1)
-		perror_exit("execve error");
+
+void	free_array(char **arr, int n)
+{
+	int	i;
+
+	i = n;
+	while (arr[i])
+		free(arr[i++]);
+	free(arr);
 }
