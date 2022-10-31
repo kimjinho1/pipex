@@ -6,7 +6,7 @@
 /*   By: jinhokim <jinhokim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 15:49:13 by jinhokim          #+#    #+#             */
-/*   Updated: 2022/10/30 08:05:12 by jinhokim         ###   ########.fr       */
+/*   Updated: 2022/11/01 00:01:33 by jinhokim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,22 +48,26 @@ void	parent_process(char **av, char **envp, int *fd)
 
 int	main(int ac, char **av, char **envp)
 {
-	pid_t	pid;
+	pid_t	pid1;
+	pid_t	pid2;
 	int		fd[2];
 
 	if (ac != 5)
 		perror_exit("argument error");
+	pid1 = fork();
+	if (pid1 == -1)
+		perror_exit("fork error");
 	if (pipe(fd) == -1)
 		perror_exit("pipe error");
-	pid = fork();
-	if (pid == -1)
+	pid2 = fork();
+	if (pid2 == -1)
 		perror_exit("fork error");
-	if (pid == 0)
+	if (pid2 == 0)
 		child_process(av, envp, fd);
-	else
-	{
+	if (pid1 == 0)
 		parent_process(av, envp, fd);
-		waitpid(pid, NULL, 0);
-	}
-	return (0);
+	close(fd[0]);
+	close(fd[1]);
+	while (wait(NULL) > 0)
+		;
 }
