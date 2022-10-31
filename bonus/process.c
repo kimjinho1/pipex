@@ -6,7 +6,7 @@
 /*   By: jinhokim <jinhokim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/01 01:30:12 by jinhokim          #+#    #+#             */
-/*   Updated: 2022/11/01 04:55:42 by jinhokim         ###   ########.fr       */
+/*   Updated: 2022/11/01 05:24:05 by jinhokim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,15 @@ static void	outfile_process(char **temp_av, char **envp, int *fd)
 
 static void	select_process(char **temp_av, char **envp, int *fd, int i)
 {
+	int	n;
+
+	n = get_array_size(temp_av);
 	if (i == 1)
 		outfile_process(temp_av, envp, fd);
-	else if (i == get_array_size(temp_av) - 2)
+	else if (i == n - 2)
 		infile_process(temp_av, envp, fd);
 	else
-		middle_process(temp_av[i], envp, fd);
+		middle_process(temp_av[n - i - 1], envp, fd);
 }
 
 void	process(char **temp_av, char **envp)
@@ -79,10 +82,10 @@ void	process(char **temp_av, char **envp)
 	int		i;
 	int		n;
 
-	if (pipe(fd) == -1)
-		perror_exit("pipe error");
 	i = 0;
 	n = get_array_size(temp_av);
+	if (pipe(fd) == -1)
+		perror_exit("pipe error");
 	while (++i < n - 1)
 	{
 		pid = fork();
