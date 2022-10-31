@@ -6,7 +6,7 @@
 /*   By: jinhokim <jinhokim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 15:49:13 by jinhokim          #+#    #+#             */
-/*   Updated: 2022/11/01 01:02:47 by jinhokim         ###   ########.fr       */
+/*   Updated: 2022/11/01 04:21:29 by jinhokim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ void	parent_process(char **av, char **envp, int *fd)
 void	process(char **av, char **envp, int *fd, int i)
 {
 	if (i == 0)
-		child_process(av, envp, fd);
-	else
 		parent_process(av, envp, fd);
+	else
+		child_process(av, envp, fd);
 }
 
 int	main(int ac, char **av, char **envp)
