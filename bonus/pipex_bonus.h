@@ -6,7 +6,7 @@
 /*   By: jinhokim <jinhokim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 17:17:44 by jinhokim          #+#    #+#             */
-/*   Updated: 2022/11/01 03:34:09 by jinhokim         ###   ########.fr       */
+/*   Updated: 2022/11/18 02:33:27 by jinhokim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,14 @@
 # include "../ft_printf/ft_printf.h"
 
 void	perror_exit(char *opt);
-int	    get_array_size(char **av);
-char	**shift(char **av, int n);
-void	free_array(char **arr, int n);
-
 void	here_doc(char *limiter, char *path);
-char	**here_doc_shift(char **av, int n, char *path);
+char	**get_env_path(char **envp);
+char	*get_cmd(char **path, char *cmd);
 
 void	execute(char *cmd, char **envp);
 
-void	process(char **temp_av, char **envp);
+void	start_process(char **av, char **envp, int i, int is_here_doc);
+void	middle_process(char **av, char **envp, int i);
+void	last_process(char **av, char **envp, int i, int is_here_doc);
 
 #endif
